@@ -28,8 +28,8 @@ export default function HomePage() {
           }}
         />
       </div>
-      {/* Fixed semi-transparent white overlay */}
-      <div className="fixed inset-0 z-0 bg-white/30" />
+      {/* Fixed semi-transparent overlay */}
+      <div className="fixed inset-0 z-0 bg-white/10" />
 
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative z-10 overflow-hidden">
@@ -41,10 +41,10 @@ export default function HomePage() {
           {/* Header */}
           <header className="w-full px-6 py-5 flex items-center justify-center">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <MapPin className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <MapPin className="w-5 h-5 text-slate-700" />
               </div>
-              <span className="text-xl font-extrabold text-white tracking-tight drop-shadow-sm">
+              <span className="text-xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">
                 맹모여지도
               </span>
             </div>
@@ -55,9 +55,9 @@ export default function HomePage() {
             {/* Badge */}
             <button
               onClick={scrollToSection}
-              className="mb-6 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/30 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
+              className="mb-6 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
             >
-              <span className="text-sm font-medium text-white">
+              <span className="text-sm font-medium text-slate-700">
                 +50개 이상의 교육 시설 정보
               </span>
             </button>
@@ -89,23 +89,23 @@ export default function HomePage() {
             </div>
 
             {/* Service description */}
-            <h1 className="text-2xl font-extrabold text-white mb-3 leading-tight text-center text-balance drop-shadow-sm">
+            <h1 className="text-2xl font-extrabold text-slate-800 mb-3 leading-tight text-center text-balance drop-shadow-sm">
               우리 아이 성향에 딱 맞는
               <br />
               교육 동네, AI가 찾아드려요
             </h1>
 
-            <p className="text-base text-white/80 leading-relaxed text-center max-w-xs">
+            <p className="text-base text-slate-600 leading-relaxed text-center max-w-xs">
               클릭해서 자세히 알아보세요
             </p>
           </main>
 
           {/* Scroll indicator */}
           <div className="w-full pb-8 flex justify-center">
-            <div className="flex flex-col items-center gap-2 text-white/60">
+            <div className="flex flex-col items-center gap-2 text-slate-500">
               <span className="text-xs">아래로 스크롤</span>
-              <div className="w-6 h-10 rounded-full border-2 border-white/40 flex items-start justify-center p-1.5">
-                <div className="w-1.5 h-3 bg-white/60 rounded-full animate-bounce" />
+              <div className="w-6 h-10 rounded-full border-2 border-slate-400 flex items-start justify-center p-1.5">
+                <div className="w-1.5 h-3 bg-slate-400 rounded-full animate-bounce" />
               </div>
             </div>
           </div>
