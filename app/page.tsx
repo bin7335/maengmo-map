@@ -2,11 +2,27 @@
 
 import { MapPin } from "lucide-react"
 import Link from "next/link"
+import { useRef, useState } from "react"
 
 export default function HomePage() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [fading, setFading] = useState(false)
+
   const scrollToSection = () => {
     const section = document.getElementById("data-section")
     section?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const handleEnded = () => {
+    setFading(true)
+    setTimeout(() => {
+      const video = videoRef.current
+      if (video) {
+        video.currentTime = 0
+        video.play()
+      }
+      setFading(false)
+    }, 10000)
   }
 
   return (
@@ -14,22 +30,22 @@ export default function HomePage() {
       {/* Fixed background video */}
       <div className="fixed inset-0 z-0 overflow-hidden bg-sky-200">
         <video
+          ref={videoRef}
           src="/Travle.mp4"
           autoPlay
           muted
           playsInline
           className="w-full h-full object-cover"
-          onEnded={(e) => {
-            setTimeout(() => {
-              const video = e.currentTarget
-              video.currentTime = 0
-              video.play()
-            }, 10000)
-          }}
+          onEnded={handleEnded}
         />
       </div>
       {/* Fixed semi-transparent overlay */}
       <div className="fixed inset-0 z-0 bg-white/10" />
+      {/* Fade overlay */}
+      <div
+        className="fixed inset-0 z-0 bg-black pointer-events-none transition-opacity duration-1000"
+        style={{ opacity: fading ? 0.6 : 0 }}
+      />
 
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative z-10 overflow-hidden">
