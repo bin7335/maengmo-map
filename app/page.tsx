@@ -70,7 +70,7 @@ export default function HomePage() {
               <div className="w-9 h-9 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <MapPin className="w-5 h-5 text-slate-700" />
               </div>
-              <span className="text-xl font-extrabold text-slate-800 tracking-tight text-outlined">
+              <span className="text-xl font-extrabold text-white tracking-tight text-shadowed">
                 맹모여지도
               </span>
             </div>
@@ -83,7 +83,7 @@ export default function HomePage() {
               onClick={scrollToSection}
               className="mb-6 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
             >
-              <span className="text-sm font-medium text-slate-700">
+              <span className="text-sm font-medium text-white text-shadowed">
                 +50개 이상의 교육 시설 정보
               </span>
             </button>
@@ -115,23 +115,23 @@ export default function HomePage() {
             </div>
 
             {/* Service description */}
-            <h1 className="text-2xl font-extrabold text-slate-800 mb-3 leading-tight text-center text-balance text-outlined">
+            <h1 className="text-2xl font-extrabold text-white mb-3 leading-tight text-center text-balance text-shadowed">
               우리 아이 성향에 딱 맞는
               <br />
               교육 동네, AI가 찾아드려요
             </h1>
 
-            <p className="text-base text-slate-600 leading-relaxed text-center max-w-xs text-outlined">
+            <p className="text-base text-white/90 leading-relaxed text-center max-w-xs text-shadowed">
               클릭해서 자세히 알아보세요
             </p>
           </main>
 
           {/* Scroll indicator */}
           <div className="w-full pb-8 flex justify-center">
-            <div className="flex flex-col items-center gap-2 text-slate-500">
-              <span className="text-xs">아래로 스크롤</span>
-              <div className="w-6 h-10 rounded-full border-2 border-slate-400 flex items-start justify-center p-1.5">
-                <div className="w-1.5 h-3 bg-slate-400 rounded-full animate-bounce" />
+            <div className="flex flex-col items-center gap-2 text-white/70">
+              <span className="text-xs text-shadowed">아래로 스크롤</span>
+              <div className="w-6 h-10 rounded-full border-2 border-white/60 flex items-start justify-center p-1.5">
+                <div className="w-1.5 h-3 bg-white/60 rounded-full animate-bounce" />
               </div>
             </div>
           </div>
@@ -209,10 +209,8 @@ export default function HomePage() {
         .animate-bounce-slow {
           animation: bounce-slow 2s ease-in-out infinite;
         }
-        .text-outlined {
-          -webkit-text-stroke: 0.5px white;
-          paint-order: stroke fill;
-          text-shadow: 0 0 8px rgba(255,255,255,0.6);
+        .text-shadowed {
+          text-shadow: 0 1px 6px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.3);
         }
       `}</style>
     </div>
