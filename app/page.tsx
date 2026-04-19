@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
       {/* Fixed background video */}
-      <div className="fixed inset-0 -z-20 overflow-hidden bg-sky-200">
+      <div className="fixed inset-0 z-0 overflow-hidden bg-sky-200">
         <video
           src="/korean_map.mp4"
           autoPlay
@@ -23,10 +23,10 @@ export default function HomePage() {
         />
       </div>
       {/* Fixed semi-transparent white overlay */}
-      <div className="fixed inset-0 bg-white/30 -z-10" />
+      <div className="fixed inset-0 z-0 bg-white/30" />
 
       {/* Hero Section - Full Screen */}
-      <section className="min-h-dvh w-full flex flex-col relative overflow-hidden">
+      <section className="min-h-dvh w-full flex flex-col relative z-10 overflow-hidden">
         {/* Floating Emojis */}
         <FloatingEmojis />
 
@@ -109,7 +109,7 @@ export default function HomePage() {
       {/* Data Section */}
       <section
         id="data-section"
-        className="w-full py-16 px-6"
+        className="w-full py-16 px-6 relative z-10"
       >
         <div className="max-w-md mx-auto">
           <h2 className="text-2xl font-extrabold text-slate-800 mb-8 text-center">
