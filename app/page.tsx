@@ -23,7 +23,6 @@ export default function HomePage() {
 
   const handleEnded = () => {
     setFading(true)
-    setShowEmojis(false)
     setTimeout(() => {
       const video = videoRef.current
       if (video) {
