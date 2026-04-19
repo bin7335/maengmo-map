@@ -12,14 +12,23 @@ export default function HomePage() {
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
       {/* Fixed background video */}
-      <div className="fixed inset-0 -z-20 overflow-hidden bg-slate-100">
+      <div className="fixed inset-0 -z-20 overflow-hidden">
         <video
           src="/korean_map.mp4"
           autoPlay
           loop
           muted
           playsInline
-          style={{ width: '100vw', height: '100vh', objectFit: 'cover' }}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            minWidth: '100%',
+            minHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+          }}
         />
       </div>
       {/* Fixed semi-transparent white overlay */}
