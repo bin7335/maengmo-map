@@ -16,7 +16,6 @@ export default function HomePage() {
         <video
           src="/Travle.mp4"
           autoPlay
-          loop
           muted
           playsInline
           className="w-full h-full object-cover"
