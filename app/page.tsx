@@ -18,10 +18,10 @@ export default function HomePage() {
         loop
         muted
         playsInline
-        className="fixed inset-0 w-full h-full object-cover -z-20"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto -z-20"
       />
       {/* Fixed semi-transparent white overlay */}
-      <div className="fixed inset-0 bg-white/50 -z-10" />
+      <div className="fixed inset-0 bg-white/30 -z-10" />
 
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative overflow-hidden">
