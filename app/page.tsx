@@ -11,19 +11,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
-      {/* Fixed background video */}
-      <div className="fixed inset-0 z-0 overflow-hidden bg-sky-200">
-        <video
-          src="/korean_map.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        />
-      </div>
-      {/* Fixed semi-transparent white overlay */}
-      <div className="fixed inset-0 z-0 bg-white/30" />
+      {/* Fixed gradient background */}
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-blue-400 via-blue-300 via-40% to-white to-90%" />
 
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative z-10 overflow-hidden">
