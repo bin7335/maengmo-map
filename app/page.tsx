@@ -19,6 +19,13 @@ export default function HomePage() {
           muted
           playsInline
           className="w-full h-full object-cover"
+          onEnded={(e) => {
+            setTimeout(() => {
+              const video = e.currentTarget
+              video.currentTime = 0
+              video.play()
+            }, 10000)
+          }}
         />
       </div>
       {/* Fixed semi-transparent white overlay */}
