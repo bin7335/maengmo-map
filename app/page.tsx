@@ -11,16 +11,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
+      {/* Fixed background image */}
+      <img
+        src="/korea-map.png"
+        alt=""
+        className="fixed inset-0 w-full h-full object-cover -z-20"
+      />
+      {/* Fixed semi-transparent white overlay */}
+      <div className="fixed inset-0 bg-white/50 -z-10" />
+
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative overflow-hidden">
-        {/* Background image */}
-        <img
-          src="/korea-map.png"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover -z-10"
-        />
-        {/* Semi-transparent white overlay */}
-        <div className="absolute inset-0 bg-white/50 -z-10" />
         {/* Floating Emojis */}
         <FloatingEmojis />
 
