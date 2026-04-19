@@ -7,14 +7,23 @@ import { useRef, useState } from "react"
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [fading, setFading] = useState(false)
+  const [showEmojis, setShowEmojis] = useState(false)
 
   const scrollToSection = () => {
     const section = document.getElementById("data-section")
     section?.scrollIntoView({ behavior: "smooth" })
   }
 
+  const handleTimeUpdate = () => {
+    const video = videoRef.current
+    if (video && video.duration) {
+      setShowEmojis(video.currentTime >= video.duration - 15)
+    }
+  }
+
   const handleEnded = () => {
     setFading(true)
+    setShowEmojis(false)
     setTimeout(() => {
       const video = videoRef.current
       if (video) {
@@ -37,6 +46,7 @@ export default function HomePage() {
           playsInline
           className="w-full h-full object-cover"
           onEnded={handleEnded}
+          onTimeUpdate={handleTimeUpdate}
         />
       </div>
       {/* Fixed semi-transparent overlay */}
@@ -50,7 +60,7 @@ export default function HomePage() {
       {/* Hero Section - Full Screen */}
       <section className="min-h-dvh w-full flex flex-col relative z-10 overflow-hidden">
         {/* Floating Emojis */}
-        <FloatingEmojis />
+        <FloatingEmojis visible={showEmojis} />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col min-h-dvh w-full">
@@ -60,7 +70,7 @@ export default function HomePage() {
               <div className="w-9 h-9 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <MapPin className="w-5 h-5 text-slate-700" />
               </div>
-              <span className="text-xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">
+              <span className="text-xl font-extrabold text-slate-800 tracking-tight text-outlined">
                 맹모여지도
               </span>
             </div>
@@ -105,13 +115,13 @@ export default function HomePage() {
             </div>
 
             {/* Service description */}
-            <h1 className="text-2xl font-extrabold text-slate-800 mb-3 leading-tight text-center text-balance drop-shadow-sm">
+            <h1 className="text-2xl font-extrabold text-slate-800 mb-3 leading-tight text-center text-balance text-outlined">
               우리 아이 성향에 딱 맞는
               <br />
               교육 동네, AI가 찾아드려요
             </h1>
 
-            <p className="text-base text-slate-600 leading-relaxed text-center max-w-xs">
+            <p className="text-base text-slate-600 leading-relaxed text-center max-w-xs text-outlined">
               클릭해서 자세히 알아보세요
             </p>
           </main>
@@ -193,22 +203,23 @@ export default function HomePage() {
       {/* Custom animations */}
       <style jsx>{`
         @keyframes bounce-slow {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
         .animate-bounce-slow {
           animation: bounce-slow 2s ease-in-out infinite;
+        }
+        .text-outlined {
+          -webkit-text-stroke: 0.5px white;
+          paint-order: stroke fill;
+          text-shadow: 0 0 8px rgba(255,255,255,0.6);
         }
       `}</style>
     </div>
   )
 }
 
-function FloatingEmojis() {
+function FloatingEmojis({ visible }: { visible: boolean }) {
   const emojis = [
     { emoji: "📚", top: "15%", left: "8%", delay: "0s", duration: "3s" },
     { emoji: "🏫", top: "20%", right: "10%", delay: "0.5s", duration: "3.5s" },
@@ -221,7 +232,10 @@ function FloatingEmojis() {
   ]
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div
+      className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-1000"
+      style={{ opacity: visible ? 1 : 0 }}
+    >
       {emojis.map((item, index) => (
         <div
           key={index}
