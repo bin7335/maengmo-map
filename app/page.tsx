@@ -19,16 +19,7 @@ export default function HomePage() {
           loop
           muted
           playsInline
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            minWidth: '100%',
-            minHeight: '100%',
-            width: 'auto',
-            height: 'auto',
-          }}
+          className="w-full h-full object-cover"
         />
       </div>
       {/* Fixed semi-transparent white overlay */}
