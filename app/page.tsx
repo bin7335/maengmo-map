@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
       {/* Fixed background video */}
-      <div className="fixed inset-0 -z-20 overflow-hidden">
+      <div className="fixed inset-0 -z-20 overflow-hidden bg-sky-200">
         <video
           src="/korean_map.mp4"
           autoPlay
