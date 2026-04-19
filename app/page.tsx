@@ -11,10 +11,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-[200dvh] w-full flex flex-col font-sans relative">
-      {/* Fixed background image */}
-      <img
-        src="/korea-map.png"
-        alt=""
+      {/* Fixed background video */}
+      <video
+        src="/korean_map.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
         className="fixed inset-0 w-full h-full object-cover -z-20"
       />
       {/* Fixed semi-transparent white overlay */}
