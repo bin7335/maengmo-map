@@ -30,8 +30,6 @@ export default function HomePage() {
         video.currentTime = 0
         video.play()
       }
-      // 영상이 페이드된 상태로 먼저 재생, 이후 서서히 밝아짐
-      setTimeout(() => setFading(false), 1500)
     }, 10000)
   }
 
