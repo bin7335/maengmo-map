@@ -17,8 +17,8 @@ export default function HomePage() {
 
   const handleTimeUpdate = () => {
     const video = videoRef.current
-    if (video && video.duration) {
-      setShowEmojis(video.currentTime >= video.duration - 15)
+    if (video && video.duration && !showEmojis) {
+      if (video.currentTime >= video.duration - 5) setShowEmojis(true)
     }
   }
 
@@ -79,39 +79,36 @@ export default function HomePage() {
 
           {/* Main Content */}
           <main className="flex-1 flex flex-col items-center px-6 py-8">
-            {/* Service description - 상단 */}
-            <div className="pt-8 text-center">
+            {/* Badge - 항상 상단에 표시 */}
+            <button
+              onClick={scrollToSection}
+              className="mb-6 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
+            >
+              <span className="text-sm font-medium text-white text-shadowed">
+                +50개 이상의 교육 시설 정보
+              </span>
+            </button>
+
+            {/* Service description */}
+            <div className="text-center mb-6">
               <h1 className="text-2xl font-extrabold text-white mb-3 leading-tight text-balance text-shadowed">
                 우리 아이 성향에 딱 맞는
                 <br />
                 교육 동네, AI가 찾아드려요
               </h1>
-              <p className="text-base text-white/90 leading-relaxed max-w-xs text-shadowed">
-                클릭해서 자세히 알아보세요
-              </p>
             </div>
 
             <div className="flex-1" />
 
             {/* 클릭 버튼 - 영상 끝날 때 등장, 이후 유지 */}
             <div
-              className="flex flex-col items-center mb-8 transition-opacity duration-1000 pointer-events-auto"
+              className="flex flex-col items-center mb-8 transition-opacity duration-1000"
               style={{ opacity: showButton ? 1 : 0, pointerEvents: showButton ? 'auto' : 'none' }}
             >
-              {/* Badge */}
-              <button
-                onClick={scrollToSection}
-                className="mb-6 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
-              >
-                <span className="text-sm font-medium text-white text-shadowed">
-                  +50개 이상의 교육 시설 정보
-                </span>
-              </button>
-
               {/* Center Pin Icon */}
               <button
                 onClick={scrollToSection}
-                className="relative mb-6 group cursor-pointer focus:outline-none"
+                className="relative mb-4 group cursor-pointer focus:outline-none"
                 aria-label="자세히 보기"
               >
                 <div className="absolute inset-0 -m-4 rounded-full bg-white/20 animate-ping" />
@@ -125,9 +122,14 @@ export default function HomePage() {
               </button>
 
               {/* Pointing finger */}
-              <div className="animate-bounce">
+              <div className="animate-bounce mb-2">
                 <span className="text-4xl">👆</span>
               </div>
+
+              {/* 클릭 안내 문구 */}
+              <p className="text-base text-white/90 text-shadowed">
+                클릭해서 자세히 알아보세요
+              </p>
             </div>
           </main>
 
