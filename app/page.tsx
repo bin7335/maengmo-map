@@ -76,16 +76,6 @@ export default function HomePage() {
 
           {/* Main Content */}
           <main className="flex-1 flex flex-col items-center px-6 py-8">
-            {/* Badge - 항상 상단에 표시 */}
-            <button
-              onClick={scrollToSection}
-              className="mb-8 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
-            >
-              <span className="text-sm font-medium text-white text-shadowed">
-                +50개 이상의 교육 시설 정보
-              </span>
-            </button>
-
             {/* 클릭 버튼 - 영상 끝날 때 등장, 이후 유지 */}
             <div
               className="flex flex-col items-center transition-opacity duration-1000"
@@ -121,13 +111,23 @@ export default function HomePage() {
             <div className="flex-1" />
 
             {/* Service description - 하단 */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4">
               <h1 className="text-2xl font-extrabold text-white leading-tight text-balance text-shadowed">
                 우리 아이 성향에 딱 맞는
                 <br />
                 교육 동네, AI가 찾아드려요
               </h1>
             </div>
+
+            {/* Badge */}
+            <button
+              onClick={scrollToSection}
+              className="mb-8 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:bg-white/80 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200"
+            >
+              <span className="text-sm font-medium text-white text-shadowed">
+                +50개 이상의 교육 시설 정보
+              </span>
+            </button>
           </main>
 
           {/* Scroll indicator */}
