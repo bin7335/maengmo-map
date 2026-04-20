@@ -143,7 +143,7 @@ export default function HomePage() {
       </section>
 
       {/* 그라디언트 전환 */}
-      <div className="w-full h-40 bg-gradient-to-b from-transparent to-[#faf7f2] relative z-10" />
+      <div className="w-full h-64 bg-gradient-to-b from-transparent to-[#faf7f2] relative z-10" />
 
       {/* Data Section */}
       <section
