@@ -145,15 +145,15 @@ export default function HomePage() {
       {/* Data Section */}
       <section
         id="data-section"
-        className="w-full py-16 px-6 relative z-10"
+        className="w-full py-16 px-6 relative z-10 bg-[#faf7f2]"
       >
         <div className="max-w-md mx-auto">
-          <h2 className="text-2xl font-extrabold text-slate-800 mb-8 text-center">
+          <h2 className="text-2xl font-extrabold text-[#1a3d2b] mb-8 text-center">
             어떤 데이터로 분석하나요?
           </h2>
 
           {/* Data Cards Grid */}
-          <div className="grid grid-cols-1 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-8">
             <DataCard
               emoji="🏫"
               title="학교 정보"
@@ -187,7 +187,7 @@ export default function HomePage() {
           </div>
 
           {/* Source note */}
-          <p className="text-xs text-slate-500 text-center mb-10 leading-relaxed">
+          <p className="text-xs text-[#8a9e96] text-center mb-10 leading-relaxed">
             본 서비스는 교육부·공공데이터포털 공공데이터를 활용합니다
           </p>
 
@@ -195,7 +195,7 @@ export default function HomePage() {
           <div className="animate-bounce-slow">
             <Link
               href="/diagnosis"
-              className="w-full flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-lg shadow-[0_8px_30px_rgba(59,130,246,0.4)] hover:shadow-[0_12px_40px_rgba(59,130,246,0.5)] hover:-translate-y-1 active:translate-y-0.5 active:shadow-[0_4px_15px_rgba(59,130,246,0.3)] transition-all duration-200"
+              className="w-full flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-[#1a3d2b] text-[#f5f0e8] font-bold text-lg shadow-[0_8px_30px_rgba(26,61,43,0.35)] hover:shadow-[0_12px_40px_rgba(26,61,43,0.45)] hover:bg-[#2d6a4f] hover:-translate-y-1 active:translate-y-0.5 transition-all duration-200"
             >
               <MapPin className="w-6 h-6" />
               우리 아이 동네 궁합 분석하기
@@ -280,13 +280,13 @@ function DataCard({
   description: string
 }) {
   return (
-    <div className="flex items-center gap-4 p-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-white/50 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-[0_2px_10px_rgba(0,0,0,0.06)] transition-all duration-200 cursor-pointer">
-      <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0 shadow-sm">
+    <div className="flex flex-col items-start gap-3 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(26,61,43,0.08)] border border-[#e8e2d9] hover:shadow-[0_8px_30px_rgba(26,61,43,0.14)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer">
+      <div className="w-11 h-11 rounded-xl bg-[#eef4f0] flex items-center justify-center flex-shrink-0">
         <span className="text-2xl">{emoji}</span>
       </div>
       <div>
-        <h3 className="font-bold text-slate-800">{title}</h3>
-        <p className="text-sm text-slate-500">{description}</p>
+        <h3 className="font-bold text-[#1a3d2b] text-sm">{title}</h3>
+        <p className="text-xs text-[#6b7c74] mt-0.5 leading-snug">{description}</p>
       </div>
     </div>
   )
