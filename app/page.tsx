@@ -30,7 +30,8 @@ export default function HomePage() {
         video.currentTime = 0
         video.play()
       }
-      setFading(false)
+      // 영상이 페이드된 상태로 먼저 재생, 이후 서서히 밝아짐
+      setTimeout(() => setFading(false), 1500)
     }, 10000)
   }
 
@@ -236,7 +237,7 @@ function FloatingEmojis({ visible }: { visible: boolean }) {
 
   return (
     <div
-      className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-1000"
+      className="fixed inset-0 pointer-events-none overflow-hidden transition-opacity duration-1000 z-[5]"
       style={{ opacity: visible ? 1 : 0 }}
     >
       {emojis.map((item, index) => (
