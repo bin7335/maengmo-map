@@ -27,28 +27,33 @@ export interface RealmWeight {
   weight: number
 }
 
+// NEIS CSV의 실제 교습계열명(대분류) 값 사용
+// 전처리 스크립트 실행 후 출력되는 "발견된 교습계열명 목록"으로 검증 가능
 export const TYPE_REALM_WEIGHTS: Record<string, RealmWeight[]> = {
   explorer: [
-    { realm: "수학",            weight: 3 },
-    { realm: "어학",            weight: 2 },
-    { realm: "입시·검정및보습", weight: 2 },
+    { realm: "수학(대)",              weight: 3 },
+    { realm: "어학(대)",              weight: 2 },
+    { realm: "입시.검정 및 보습",     weight: 2 },
   ],
   active: [
-    { realm: "체육",            weight: 3 },
-    { realm: "예능(음악/미술)", weight: 2 },
+    { realm: "체육(대)",              weight: 3 },
+    { realm: "예능(대)",              weight: 2 },
+    { realm: "기예(대)",              weight: 1 },
   ],
   social: [
-    { realm: "예능(음악/미술)", weight: 3 },
-    { realm: "어학",            weight: 2 },
+    { realm: "예능(대)",              weight: 3 },
+    { realm: "기예(대)",              weight: 2 },
+    { realm: "어학(대)",              weight: 1 },
   ],
   safe: [
-    { realm: "수학",              weight: 3 },
-    { realm: "입시·검정및보습",   weight: 2 },
-    { realm: "기타교과(국제/특수)", weight: 1 },
+    { realm: "수학(대)",              weight: 3 },
+    { realm: "입시.검정 및 보습",     weight: 2 },
+    { realm: "기타(대)",              weight: 1 },
   ],
   creative: [
-    { realm: "예능(음악/미술)",     weight: 3 },
-    { realm: "기타교과(국제/특수)", weight: 2 },
+    { realm: "예능(대)",              weight: 3 },
+    { realm: "기예(대)",              weight: 2 },
+    { realm: "기타(대)",              weight: 1 },
   ],
 }
 
