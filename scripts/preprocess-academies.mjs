@@ -1,6 +1,10 @@
 import { readFileSync, writeFileSync, existsSync } from "fs"
 import { resolve, dirname } from "path"
 import { fileURLToPath } from "url"
+import { createRequire } from "module"
+
+const require = createRequire(import.meta.url)
+const iconv = require("iconv-lite")
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const CSV_PATH = resolve(__dirname, "../data/academies_raw.csv")
@@ -38,19 +42,40 @@ const SIDO_CODE_MAP = {
 const COL = { sidoCode: 0, sigungu: 2, realm: 13 }
 
 console.log("📂 파일 읽는 중...")
-const raw = readFileSync(CSV_PATH, "utf-8")
+const buf = readFileSync(CSV_PATH)
+const raw = iconv.decode(buf, "EUC-KR")
 const lines = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n")
 
 // BOM 제거
 lines[0] = lines[0].replace(/^\uFEFF/, "")
 
+// 구분자 자동 감지 (탭 vs 콤마)
+const firstLine = lines[0]
+const tabCount   = (firstLine.match(/\t/g) ?? []).length
+const commaCount = (firstLine.match(/,/g)  ?? []).length
+const SEP = tabCount >= commaCount ? "\t" : ","
+console.log(`📋 구분자: ${SEP === "\t" ? "탭(TSV)" : "콤마(CSV)"}`)
+
 // 첫 행이 헤더인지 데이터인지 판단
-const firstCols = lines[0].split("\t")
+const firstCols = firstLine.split(SEP)
 const hasHeader = !Object.keys(SIDO_CODE_MAP).includes(firstCols[0].trim())
 const startIdx = hasHeader ? 1 : 0
 
 if (hasHeader) {
-  console.log("📋 헤더 행 감지됨:", firstCols.slice(0, 15).join(" | "))
+  console.log("📋 헤더 행 감지됨:", firstCols.slice(0, 5).join(" | "), "...")
+  // 헤더 이름으로 컬럼 인덱스 재탐색
+  const find = (...keywords) =>
+    firstCols.findIndex((h) => keywords.every((kw) => h.includes(kw)))
+  COL.sidoCode = find("시도", "코드")
+  COL.sigungu  = find("행정구역")
+  COL.realm    = find("교습계열")
+  console.log(`   [${COL.sidoCode}] ${firstCols[COL.sidoCode]}`)
+  console.log(`   [${COL.sigungu}]  ${firstCols[COL.sigungu]}`)
+  console.log(`   [${COL.realm}]  ${firstCols[COL.realm]}`)
+  if (COL.realm === -1) {
+    console.error("❌ 교습계열명 컬럼을 찾지 못했어요. 헤더 목록:", firstCols.join(" | "))
+    process.exit(1)
+  }
 } else {
   console.log("📋 헤더 없음 — 고정 컬럼 인덱스 사용")
   console.log(`   [${COL.sidoCode}] 시도코드, [${COL.sigungu}] 행정구역명, [${COL.realm}] 교습계열명`)
@@ -67,7 +92,7 @@ for (let i = startIdx; i < lines.length; i++) {
   const line = lines[i].trim()
   if (!line) continue
 
-  const cols = line.split("\t")
+  const cols = line.split(SEP)
 
   const sidoCode = cols[COL.sidoCode]?.trim()
   const sigungu  = cols[COL.sigungu]?.trim()
@@ -75,7 +100,8 @@ for (let i = startIdx; i < lines.length; i++) {
 
   const sido = SIDO_CODE_MAP[sidoCode]
 
-  if (!sido || !sigungu || !realm) { skipped++; continue }
+  // 한글 포함 여부로 유효한 교습계열명인지 검사 (숫자 등 오류값 제외)
+  if (!sido || !sigungu || !realm || !/[가-힣]/.test(realm)) { skipped++; continue }
 
   realmSet.add(realm)
 
