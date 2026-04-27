@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, MapPin } from "lucide-react"
 import Link from "next/link"
+import { SIDO_SHORT } from "@/lib/academy-scoring"
+import type { DistrictScore } from "@/lib/academy-scoring"
 
 type ResultType = {
   key: string
@@ -74,7 +76,6 @@ const resultTypes: ResultType[] = [
   },
 ]
 
-// 유형별 가중치 (질문 0~19 인덱스)
 const weights: Record<string, number[]> = {
   explorer: [0, 2, 0, 1, 1, 0, 1, 0, 2, 3, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0],
   active:   [2, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 0],
@@ -96,16 +97,37 @@ export default function ResultPage() {
   const router = useRouter()
   const [result, setResult] = useState<ResultType | null>(null)
   const [visible, setVisible] = useState(false)
+  const [regionScores, setRegionScores] = useState<DistrictScore[]>([])
+  const [regionLoading, setRegionLoading] = useState(false)
+  const [preferredRegions, setPreferredRegions] = useState<string[]>([])
 
   useEffect(() => {
     const raw = sessionStorage.getItem("diagnosis_answers")
     if (!raw) { router.replace("/diagnosis"); return }
     const answers: number[] = JSON.parse(raw)
-    setResult(calcResult(answers))
+    const r = calcResult(answers)
+    setResult(r)
     setTimeout(() => setVisible(true), 100)
+
+    const regionsRaw = sessionStorage.getItem("preferred_regions")
+    const regions: string[] = regionsRaw ? JSON.parse(regionsRaw) : []
+    setPreferredRegions(regions)
+
+    if (regions.length > 0) {
+      setRegionLoading(true)
+      fetch(`/api/region-scores?type=${r.key}&regions=${regions.join(",")}`)
+        .then((res) => res.json())
+        .then((data) => setRegionScores(data.results ?? []))
+        .catch(() => {})
+        .finally(() => setRegionLoading(false))
+    }
   }, [router])
 
   if (!result) return null
+
+  const regionLabel = preferredRegions
+    .map((r) => SIDO_SHORT[r] ?? r)
+    .join(" · ")
 
   return (
     <div className="min-h-dvh w-full flex flex-col font-sans bg-[#faf7f2]">
@@ -176,6 +198,62 @@ export default function ResultPage() {
           </div>
         </div>
 
+        {/* 추천 지역 */}
+        {preferredRegions.length > 0 && (
+          <div className="bg-white rounded-3xl p-5 shadow-[0_4px_16px_rgba(26,61,43,0.08)]">
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-sm font-extrabold text-[#1a3d2b]">추천 지역 TOP 5</h2>
+              <span className="text-xs text-[#6b7c74]">학원·교습소 기반</span>
+            </div>
+            <p className="text-xs text-[#6b7c74] mb-4">{regionLabel} 내 분석 결과</p>
+
+            {regionLoading ? (
+              <div className="flex flex-col gap-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="h-11 bg-[#f0ece6] rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : regionScores.length === 0 ? (
+              <p className="text-sm text-[#6b7c74] text-center py-4">데이터를 불러올 수 없어요</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {regionScores.slice(0, 5).map((item, i) => (
+                  <div key={`${item.sido}-${item.sigungu}`} className="flex items-center gap-3">
+                    <span
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
+                        i === 0
+                          ? "bg-[#1a3d2b] text-[#f5f0e8]"
+                          : "bg-[#eef4f0] text-[#2d6a4f]"
+                      }`}
+                    >
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-bold text-[#1a3d2b]">
+                          {item.sigungu}
+                          <span className="text-xs font-normal text-[#6b7c74] ml-1">
+                            ({SIDO_SHORT[item.sido] ?? item.sido})
+                          </span>
+                        </span>
+                        <span className="text-xs text-[#6b7c74] flex-shrink-0 ml-2">
+                          {item.count.toLocaleString()}개
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-[#eef4f0] rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#2d6a4f] rounded-full transition-all duration-700"
+                          style={{ width: `${(item.score / regionScores[0].score) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* CTA */}
         <div className="flex flex-col gap-3 pb-8">
           <Link
@@ -186,7 +264,7 @@ export default function ResultPage() {
             이런 환경의 동네 보러 가기
           </Link>
           <button
-            onClick={() => { sessionStorage.removeItem("diagnosis_answers"); router.push("/diagnosis") }}
+            onClick={() => { sessionStorage.removeItem("diagnosis_answers"); sessionStorage.removeItem("preferred_regions"); router.push("/diagnosis") }}
             className="w-full py-4 rounded-full border-2 border-[#e8e2d9] text-[#6b7c74] font-bold text-base hover:border-[#2d6a4f] hover:text-[#1a3d2b] transition-all duration-200"
           >
             다시 진단하기

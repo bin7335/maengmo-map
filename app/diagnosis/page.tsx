@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, MapPin } from "lucide-react"
+import { SIDO_LIST } from "@/lib/academy-scoring"
 
 const questions = [
   { id: 1,  text: "아이는 여러 사람 앞에 나서는 걸 즐기는 편이에요" },
@@ -35,6 +36,8 @@ const scaleOptions = [
 
 export default function DiagnosisPage() {
   const router = useRouter()
+  const [phase, setPhase] = useState<"region" | "questions">("region")
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([])
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<number[]>(Array(questions.length).fill(-1))
   const [animating, setAnimating] = useState(false)
@@ -43,6 +46,14 @@ export default function DiagnosisPage() {
   const progress = ((current + 1) / total) * 100
   const selected = answers[current]
   const isLast = current + 1 >= total
+
+  const toggleRegion = (full: string) => {
+    setSelectedRegions((prev) => {
+      if (prev.includes(full)) return prev.filter((r) => r !== full)
+      if (prev.length >= 2) return prev
+      return [...prev, full]
+    })
+  }
 
   const handleSelect = (value: number) => {
     if (animating) return
@@ -57,6 +68,7 @@ export default function DiagnosisPage() {
     setTimeout(() => {
       if (isLast) {
         sessionStorage.setItem("diagnosis_answers", JSON.stringify(answers))
+        sessionStorage.setItem("preferred_regions", JSON.stringify(selectedRegions))
         router.push("/result")
       } else {
         setCurrent((prev) => prev + 1)
@@ -66,7 +78,8 @@ export default function DiagnosisPage() {
   }
 
   const handleBack = () => {
-    if (current === 0) { router.back(); return }
+    if (phase === "region") { router.back(); return }
+    if (current === 0) { setPhase("region"); return }
     setCurrent((prev) => prev - 1)
   }
 
@@ -85,90 +98,145 @@ export default function DiagnosisPage() {
           <div className="w-7 h-7 rounded-full bg-[#1a3d2b] flex items-center justify-center">
             <MapPin className="w-4 h-4 text-[#f5f0e8]" />
           </div>
-          <span className="text-base font-extrabold text-[#1a3d2b] tracking-tight">
-            맹모여지도
-          </span>
+          <span className="text-base font-extrabold text-[#1a3d2b] tracking-tight">맹모여지도</span>
         </div>
 
-        <span className="text-sm font-bold text-[#6b7c74]">
-          {current + 1}/{total}
-        </span>
+        {phase === "questions" ? (
+          <span className="text-sm font-bold text-[#6b7c74]">{current + 1}/{total}</span>
+        ) : (
+          <div className="w-10" />
+        )}
       </header>
 
-      {/* Progress Bar */}
-      <div className="px-6 pb-4">
-        <div className="w-full h-1.5 bg-[#e8e2d9] rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[#1a3d2b] rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Main */}
-      <main className="flex-1 flex flex-col px-5 py-4 max-w-md mx-auto w-full">
-        {/* Question */}
-        <div
-          className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(26,61,43,0.1)] p-6 mb-6"
-          style={{
-            opacity: animating ? 0 : 1,
-            transform: animating ? "translateY(8px)" : "translateY(0)",
-            transition: "opacity 0.2s ease, transform 0.2s ease",
-          }}
-        >
-          <div className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#eef4f0] text-[#1a3d2b] text-xs font-extrabold flex-shrink-0 mt-0.5">
-              Q{current + 1}
-            </span>
-            <h2 className="text-lg font-bold text-[#1a3d2b] leading-snug">
-              {questions[current].text}
-            </h2>
+      {/* Progress Bar (문항 단계에서만) */}
+      {phase === "questions" && (
+        <div className="px-6 pb-4">
+          <div className="w-full h-1.5 bg-[#e8e2d9] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#1a3d2b] rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
+      )}
 
-        {/* Scale Options */}
-        <div
-          className="grid grid-cols-3 gap-3 mb-6"
-          style={{
-            opacity: animating ? 0 : 1,
-            transition: "opacity 0.2s ease 0.05s",
-          }}
-        >
-          {scaleOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => handleSelect(opt.value)}
-              className={`
-                flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border-2 transition-all duration-200 active:scale-[0.97]
-                ${selected === opt.value
-                  ? "bg-[#1a3d2b] border-[#1a3d2b] shadow-[0_6px_20px_rgba(26,61,43,0.35)] -translate-y-0.5"
-                  : "bg-white border-[#e8e2d9] hover:border-[#2d6a4f] hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(26,61,43,0.12)]"
-                }
-              `}
-            >
-              <span className="text-2xl">{opt.emoji}</span>
-              <span className={`text-sm font-bold ${selected === opt.value ? "text-[#f5f0e8]" : "text-[#1a3d2b]"}`}>
-                {opt.label}
+      {/* 지역 선택 화면 */}
+      {phase === "region" && (
+        <main className="flex-1 flex flex-col px-5 py-4 max-w-md mx-auto w-full">
+          <div className="mb-6">
+            <p className="text-sm font-medium text-[#6b7c74] mb-2">STEP 1</p>
+            <h1 className="text-2xl font-extrabold text-[#1a3d2b] leading-snug mb-2">
+              어느 지역으로<br />이사를 고려하고 계세요?
+            </h1>
+            <p className="text-sm text-[#6b7c74]">
+              최대 2곳까지 선택할 수 있어요
+              {selectedRegions.length > 0 && (
+                <span className="ml-2 font-bold text-[#2d6a4f]">({selectedRegions.length}/2 선택됨)</span>
+              )}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-8">
+            {SIDO_LIST.map(({ full, short }) => {
+              const isSelected = selectedRegions.includes(full)
+              const isDisabled = !isSelected && selectedRegions.length >= 2
+              return (
+                <button
+                  key={full}
+                  onClick={() => toggleRegion(full)}
+                  disabled={isDisabled}
+                  className={`
+                    px-4 py-2.5 rounded-full text-sm font-bold border-2 transition-all duration-200 active:scale-95
+                    ${isSelected
+                      ? "bg-[#1a3d2b] border-[#1a3d2b] text-[#f5f0e8] shadow-[0_4px_12px_rgba(26,61,43,0.3)]"
+                      : isDisabled
+                        ? "bg-[#f5f0e8] border-[#e8e2d9] text-[#c0b8b0] cursor-not-allowed"
+                        : "bg-white border-[#e8e2d9] text-[#1a3d2b] hover:border-[#2d6a4f] hover:shadow-[0_2px_8px_rgba(26,61,43,0.1)]"
+                    }
+                  `}
+                >
+                  {short}
+                </button>
+              )
+            })}
+          </div>
+
+          <button
+            onClick={() => setPhase("questions")}
+            disabled={selectedRegions.length === 0}
+            className={`
+              w-full py-4 rounded-full font-bold text-base transition-all duration-200
+              ${selectedRegions.length > 0
+                ? "bg-[#1a3d2b] text-[#f5f0e8] shadow-[0_8px_24px_rgba(26,61,43,0.3)] hover:bg-[#2d6a4f] hover:-translate-y-0.5 active:translate-y-0.5"
+                : "bg-[#e8e2d9] text-[#a09890] cursor-not-allowed"
+              }
+            `}
+          >
+            다음 →
+          </button>
+        </main>
+      )}
+
+      {/* 문항 화면 */}
+      {phase === "questions" && (
+        <main className="flex-1 flex flex-col px-5 py-4 max-w-md mx-auto w-full">
+          <div
+            className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(26,61,43,0.1)] p-6 mb-6"
+            style={{
+              opacity: animating ? 0 : 1,
+              transform: animating ? "translateY(8px)" : "translateY(0)",
+              transition: "opacity 0.2s ease, transform 0.2s ease",
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#eef4f0] text-[#1a3d2b] text-xs font-extrabold flex-shrink-0 mt-0.5">
+                Q{current + 1}
               </span>
-            </button>
-          ))}
-        </div>
+              <h2 className="text-lg font-bold text-[#1a3d2b] leading-snug">
+                {questions[current].text}
+              </h2>
+            </div>
+          </div>
 
-        {/* Next Button */}
-        <button
-          onClick={handleNext}
-          disabled={selected === -1}
-          className={`
-            w-full py-4 rounded-full font-bold text-base transition-all duration-200
-            ${selected !== -1
-              ? "bg-[#1a3d2b] text-[#f5f0e8] shadow-[0_8px_24px_rgba(26,61,43,0.3)] hover:bg-[#2d6a4f] hover:-translate-y-0.5 active:translate-y-0.5"
-              : "bg-[#e8e2d9] text-[#a09890] cursor-not-allowed"
-            }
-          `}
-        >
-          {isLast ? "결과 보기 🎉" : "다음 →"}
-        </button>
-      </main>
+          <div
+            className="grid grid-cols-3 gap-3 mb-6"
+            style={{ opacity: animating ? 0 : 1, transition: "opacity 0.2s ease 0.05s" }}
+          >
+            {scaleOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => handleSelect(opt.value)}
+                className={`
+                  flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border-2 transition-all duration-200 active:scale-[0.97]
+                  ${selected === opt.value
+                    ? "bg-[#1a3d2b] border-[#1a3d2b] shadow-[0_6px_20px_rgba(26,61,43,0.35)] -translate-y-0.5"
+                    : "bg-white border-[#e8e2d9] hover:border-[#2d6a4f] hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(26,61,43,0.12)]"
+                  }
+                `}
+              >
+                <span className="text-2xl">{opt.emoji}</span>
+                <span className={`text-sm font-bold ${selected === opt.value ? "text-[#f5f0e8]" : "text-[#1a3d2b]"}`}>
+                  {opt.label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleNext}
+            disabled={selected === -1}
+            className={`
+              w-full py-4 rounded-full font-bold text-base transition-all duration-200
+              ${selected !== -1
+                ? "bg-[#1a3d2b] text-[#f5f0e8] shadow-[0_8px_24px_rgba(26,61,43,0.3)] hover:bg-[#2d6a4f] hover:-translate-y-0.5 active:translate-y-0.5"
+                : "bg-[#e8e2d9] text-[#a09890] cursor-not-allowed"
+              }
+            `}
+          >
+            {isLast ? "결과 보기 🎉" : "다음 →"}
+          </button>
+        </main>
+      )}
     </div>
   )
 }
